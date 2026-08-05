@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,9 +40,15 @@ class JobRegistryHelperTest {
     private static XxlJobAdminConfig adminConfig;
     private static XxlJobRegistryDao registryDao;
     private static XxlJobGroupDao groupDao;
+    private static XxlJobAdminConfig originalAdminConfig;
+    private static Field adminConfigField;
 
     @BeforeAll
     static void setUpClass() throws Exception {
+        adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
+        adminConfigField.setAccessible(true);
+        originalAdminConfig = (XxlJobAdminConfig) adminConfigField.get(null);
+
         adminConfig = mock(XxlJobAdminConfig.class);
         registryDao = mock(XxlJobRegistryDao.class);
         groupDao = mock(XxlJobGroupDao.class);
@@ -49,23 +57,39 @@ class JobRegistryHelperTest {
         when(adminConfig.getXxlJobGroupDao()).thenReturn(groupDao);
 
         // Set static adminConfig via reflection
-        Field field = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
-        field.setAccessible(true);
-        field.set(null, adminConfig);
-
-        JobRegistryHelper.getInstance().start();
+        adminConfigField.set(null, adminConfig);
     }
 
     @BeforeEach
     void setUp() throws Exception {
+        stopHelper();
+        adminConfigField.set(null, adminConfig);
         reset(registryDao, groupDao);
         resetSingletonInstance();
+    }
+
+    @AfterEach
+    void tearDown() {
+        stopHelper();
+    }
+
+    @AfterAll
+    static void tearDownClass() throws Exception {
+        stopHelper();
+        adminConfigField.set(null, originalAdminConfig);
     }
 
     private void resetSingletonInstance() throws Exception {
         Field instanceField = JobRegistryHelper.class.getDeclaredField("instance");
         instanceField.setAccessible(true);
         instanceField.set(null, new JobRegistryHelper());
+    }
+
+    private static void stopHelper() {
+        try {
+            JobRegistryHelper.getInstance().toStop();
+        } catch (Exception ignored) {
+        }
     }
 
     @Test

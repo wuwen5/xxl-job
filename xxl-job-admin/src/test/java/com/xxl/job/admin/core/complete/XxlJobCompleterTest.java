@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.complete;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.xxl.job.admin.AbstractTest;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
@@ -33,11 +35,23 @@ public class XxlJobCompleterTest extends AbstractTest {
     @Autowired
     XxlJobInfoDao xxlJobInfoDao;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
     private XxlJobInfo originalJobInfo;
     private XxlJobLog originalJobLog;
 
     @BeforeEach
     public void setUp() {
+        XxlJobAdminConfig config = XxlJobAdminConfig.getAdminConfig();
+        assertNotNull(config, "XxlJobAdminConfig should be initialized for SpringBootTest");
+        assertSame(
+                applicationContext.getBean(XxlJobAdminConfig.class),
+                config,
+                "XxlJobAdminConfig static instance was overwritten by another test");
+        assertNotNull(config.getXxlJobInfoDao(), "XxlJobInfoDao should be wired on the static admin config");
+        assertNotNull(config.getXxlJobLogDao(), "XxlJobLogDao should be wired on the static admin config");
+
         // Clean up test data
         jdbcTemplate.execute("DELETE FROM xxl_job_log WHERE id > 0");
         jdbcTemplate.execute("DELETE FROM xxl_job_info WHERE id > 0");

@@ -19,6 +19,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -28,10 +29,21 @@ import org.mockito.MockedStatic;
  */
 public class ExecutorRouteBusyoverTest {
 
+    private static XxlJobAdminConfig originalAdminConfig;
+
     @BeforeAll
     static void setUp() throws Exception {
+        originalAdminConfig = XxlJobAdminConfig.getAdminConfig();
         XxlJobAdminConfig xxlJobAdminConfig = new XxlJobAdminConfig();
         xxlJobAdminConfig.afterPropertiesSet();
+    }
+
+    @AfterAll
+    static void tearDown() throws Exception {
+        XxlJobAdminConfig xxlJobAdminConfig = originalAdminConfig;
+        if (xxlJobAdminConfig != null) {
+            xxlJobAdminConfig.afterPropertiesSet();
+        }
     }
 
     @Test
