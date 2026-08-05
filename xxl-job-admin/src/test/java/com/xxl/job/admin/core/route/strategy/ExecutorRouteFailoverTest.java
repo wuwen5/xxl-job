@@ -16,8 +16,9 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -34,12 +35,15 @@ public class ExecutorRouteFailoverTest {
         adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
         adminConfigField.setAccessible(true);
         originalAdminConfig = (XxlJobAdminConfig) adminConfigField.get(null);
-        XxlJobAdminConfig xxlJobAdminConfig = new XxlJobAdminConfig();
-        adminConfigField.set(null, xxlJobAdminConfig);
     }
 
-    @AfterAll
-    static void tearDown() throws Exception {
+    @BeforeEach
+    void setUpTest() throws Exception {
+        adminConfigField.set(null, new XxlJobAdminConfig());
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
         adminConfigField.set(null, originalAdminConfig);
     }
 
