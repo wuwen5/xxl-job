@@ -9,6 +9,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.context.XxlJobContext;
+import java.lang.reflect.Field;
 import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,13 +43,19 @@ public class XxlJobCompleterTest extends AbstractTest {
     private XxlJobLog originalJobLog;
 
     @BeforeEach
-    public void setUp() {
-        XxlJobAdminConfig config = XxlJobAdminConfig.getAdminConfig();
-        assertNotNull(config, "XxlJobAdminConfig should be initialized for SpringBootTest");
-        assertSame(
-                applicationContext.getBean(XxlJobAdminConfig.class),
-                config,
-                "XxlJobAdminConfig static instance was overwritten by another test");
+    public void setUp() throws Exception {
+        XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
+        assertNotNull(springConfig, "XxlJobAdminConfig should be initialized for SpringBootTest");
+
+        Field adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
+        adminConfigField.setAccessible(true);
+        XxlJobAdminConfig config = (XxlJobAdminConfig) adminConfigField.get(null);
+        if (config != springConfig) {
+            adminConfigField.set(null, springConfig);
+            config = XxlJobAdminConfig.getAdminConfig();
+        }
+
+        assertSame(springConfig, config, "XxlJobAdminConfig static instance was overwritten by another test");
         assertNotNull(config.getXxlJobInfoDao(), "XxlJobInfoDao should be wired on the static admin config");
         assertNotNull(config.getXxlJobLogDao(), "XxlJobLogDao should be wired on the static admin config");
 

@@ -17,6 +17,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.IdleBeatParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
@@ -30,20 +31,20 @@ import org.mockito.MockedStatic;
 public class ExecutorRouteBusyoverTest {
 
     private static XxlJobAdminConfig originalAdminConfig;
+    private static Field adminConfigField;
 
     @BeforeAll
     static void setUp() throws Exception {
-        originalAdminConfig = XxlJobAdminConfig.getAdminConfig();
+        adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
+        adminConfigField.setAccessible(true);
+        originalAdminConfig = (XxlJobAdminConfig) adminConfigField.get(null);
         XxlJobAdminConfig xxlJobAdminConfig = new XxlJobAdminConfig();
-        xxlJobAdminConfig.afterPropertiesSet();
+        adminConfigField.set(null, xxlJobAdminConfig);
     }
 
     @AfterAll
     static void tearDown() throws Exception {
-        XxlJobAdminConfig xxlJobAdminConfig = originalAdminConfig;
-        if (xxlJobAdminConfig != null) {
-            xxlJobAdminConfig.afterPropertiesSet();
-        }
+        adminConfigField.set(null, originalAdminConfig);
     }
 
     @Test
