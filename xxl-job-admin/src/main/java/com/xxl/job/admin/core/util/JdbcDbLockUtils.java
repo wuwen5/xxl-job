@@ -32,16 +32,15 @@ public final class JdbcDbLockUtils {
         JdbcTemplate jdbcTemplate = XxlJobAdminConfig.getAdminConfig().getJdbcTemplate();
 
         try {
-            // 目前仅在执行器启动存在自动注册任务时，才会插入锁记录
-            if (insertLock) {
-                jdbcTemplate.update(INSERT_LOCK_SQL, lockName);
-            }
-        } catch (DuplicateKeyException e) {
-            log.debug("executeWithDbLock duplicate key, lockName={}", lockName);
-        }
-
-        try {
             txTemplate.execute(status -> {
+                try {
+                    // 目前仅在执行器启动存在自动注册任务时，才会插入锁记录
+                    if (insertLock) {
+                        jdbcTemplate.update(INSERT_LOCK_SQL, lockName);
+                    }
+                } catch (DuplicateKeyException e) {
+                    log.debug("executeWithDbLock duplicate key, lockName={}", lockName);
+                }
                 jdbcTemplate.queryForObject(LOCK_SQL + (waitForLock ? "" : " nowait"), String.class, lockName);
                 run.run();
                 return null;
