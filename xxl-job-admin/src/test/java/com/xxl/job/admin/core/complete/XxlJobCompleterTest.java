@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.complete;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.xxl.job.admin.AbstractTest;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -38,6 +39,13 @@ public class XxlJobCompleterTest extends AbstractTest {
 
     @BeforeEach
     public void setUp() {
+        try {
+            XxlJobAdminConfig config = XxlJobAdminConfig.getAdminConfig();
+            assertNotNull(config, "XxlJobAdminConfig should be initialized for SpringBootTest");
+        } catch (NullPointerException e) {
+            logger.warn("XxlJobAdminConfig not initialized, test may fail", e);
+        }
+
         // Clean up test data
         jdbcTemplate.execute("DELETE FROM xxl_job_log WHERE id > 0");
         jdbcTemplate.execute("DELETE FROM xxl_job_info WHERE id > 0");
