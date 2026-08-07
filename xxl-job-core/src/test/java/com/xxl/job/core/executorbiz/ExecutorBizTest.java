@@ -9,6 +9,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.xxl.job.core.biz.ExecutorBiz;
@@ -207,6 +209,6 @@ public class ExecutorBizTest {
 
     @Test
     public void registry() {
-        verify(postRequestedFor(urlPathEqualTo("/api/initJobInfo")));
+        await().atMost(3, SECONDS).untilAsserted(() -> verify(postRequestedFor(urlPathEqualTo("/api/initJobInfo"))));
     }
 }
