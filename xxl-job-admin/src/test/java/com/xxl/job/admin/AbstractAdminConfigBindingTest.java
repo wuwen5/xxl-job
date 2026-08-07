@@ -10,7 +10,7 @@ abstract class AbstractAdminConfigBindingTest {
     private ApplicationContext applicationContext;
 
     @BeforeEach
-    void bindAdminConfig() throws IllegalAccessException {
+    void bindAdminConfig() {
         TestAdminConfigUtils.bindCurrentAdminConfig(applicationContext);
     }
 }

@@ -10,10 +10,14 @@ final class TestAdminConfigUtils {
 
     private TestAdminConfigUtils() {}
 
-    static void bindCurrentAdminConfig(ApplicationContext applicationContext) throws IllegalAccessException {
-        XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
-        if (ADMIN_CONFIG_FIELD.get(null) != springConfig) {
-            ADMIN_CONFIG_FIELD.set(null, springConfig);
+    static void bindCurrentAdminConfig(ApplicationContext applicationContext) {
+        try {
+            XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
+            if (ADMIN_CONFIG_FIELD.get(null) != springConfig) {
+                ADMIN_CONFIG_FIELD.set(null, springConfig);
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Failed to rebind XxlJobAdminConfig.adminConfig", e);
         }
     }
 
