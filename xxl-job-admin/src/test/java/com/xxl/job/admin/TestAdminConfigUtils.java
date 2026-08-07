@@ -10,7 +10,7 @@ final class TestAdminConfigUtils {
 
     private TestAdminConfigUtils() {}
 
-    static void bindCurrentAdminConfig(ApplicationContext applicationContext) throws Exception {
+    static void bindCurrentAdminConfig(ApplicationContext applicationContext) throws IllegalAccessException {
         XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
         if (ADMIN_CONFIG_FIELD.get(null) != springConfig) {
             ADMIN_CONFIG_FIELD.set(null, springConfig);
