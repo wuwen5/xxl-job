@@ -6,14 +6,24 @@ import org.springframework.context.ApplicationContext;
 
 final class TestAdminConfigUtils {
 
+    private static final Field ADMIN_CONFIG_FIELD = initAdminConfigField();
+
     private TestAdminConfigUtils() {}
 
     static void bindCurrentAdminConfig(ApplicationContext applicationContext) throws Exception {
         XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
-        Field adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
-        adminConfigField.setAccessible(true);
-        if (adminConfigField.get(null) != springConfig) {
-            adminConfigField.set(null, springConfig);
+        if (ADMIN_CONFIG_FIELD.get(null) != springConfig) {
+            ADMIN_CONFIG_FIELD.set(null, springConfig);
+        }
+    }
+
+    private static Field initAdminConfigField() {
+        try {
+            Field adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
+            adminConfigField.setAccessible(true);
+            return adminConfigField;
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException("Failed to access XxlJobAdminConfig.adminConfig", e);
         }
     }
 }
