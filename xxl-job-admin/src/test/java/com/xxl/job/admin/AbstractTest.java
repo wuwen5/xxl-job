@@ -5,4 +5,4 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public abstract class AbstractTest {}
+public abstract class AbstractTest extends AbstractAdminConfigBindingTest {}

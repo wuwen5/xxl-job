@@ -17,9 +17,12 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.IdleBeatParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -28,10 +31,24 @@ import org.mockito.MockedStatic;
  */
 public class ExecutorRouteBusyoverTest {
 
+    private static XxlJobAdminConfig originalAdminConfig;
+    private static Field adminConfigField;
+
     @BeforeAll
     static void setUp() throws Exception {
-        XxlJobAdminConfig xxlJobAdminConfig = new XxlJobAdminConfig();
-        xxlJobAdminConfig.afterPropertiesSet();
+        adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
+        adminConfigField.setAccessible(true);
+        originalAdminConfig = (XxlJobAdminConfig) adminConfigField.get(null);
+    }
+
+    @BeforeEach
+    void setUpTest() throws Exception {
+        adminConfigField.set(null, new XxlJobAdminConfig());
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        adminConfigField.set(null, originalAdminConfig);
     }
 
     @Test

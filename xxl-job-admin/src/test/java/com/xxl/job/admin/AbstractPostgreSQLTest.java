@@ -8,7 +8,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest
 @ActiveProfiles("pgtest")
-public abstract class AbstractPostgreSQLTest {
+public abstract class AbstractPostgreSQLTest extends AbstractAdminConfigBindingTest {
 
     private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("xxl_job")
