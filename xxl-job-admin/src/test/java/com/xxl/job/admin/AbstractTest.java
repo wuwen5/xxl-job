@@ -1,7 +1,5 @@
 package com.xxl.job.admin;
 
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +15,6 @@ public abstract class AbstractTest {
 
     @BeforeEach
     void bindAdminConfig() throws Exception {
-        XxlJobAdminConfig springConfig = applicationContext.getBean(XxlJobAdminConfig.class);
-        Field adminConfigField = XxlJobAdminConfig.class.getDeclaredField("adminConfig");
-        adminConfigField.setAccessible(true);
-        if (adminConfigField.get(null) != springConfig) {
-            adminConfigField.set(null, springConfig);
-        }
+        TestAdminConfigUtils.bindCurrentAdminConfig(applicationContext);
     }
 }
