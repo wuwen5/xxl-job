@@ -169,7 +169,7 @@ Default login: `admin / 123456` (seeded by the database init script).
 ./mvnw -B clean package -DskipTests --file pom.xml
 
 # 2. Start the admin
-java -jar xxl-job-admin/target/xxl-job-admin.jar
+java -jar xxl-job-admin/target/*.jar
 ```
 
 Then open [http://localhost:8080](http://localhost:8080) and log in with `admin / 123456`.
@@ -270,7 +270,7 @@ Validate the upgrade in a staging environment and back up data before rolling in
 - `./mvnw -B clean verify --file pom.xml` runs Spotless format checks, unit tests, and JaCoCo coverage.
 - Run only unit tests: `./mvnw -pl xxl-job-core,xxl-job-admin test`.
 - Run a single test class: `./mvnw -pl xxl-job-admin -Dtest=ClassName test`.
-- End-to-end tests are not part of the Maven build. Trigger them with `docker compose -f docker-compose-e2e.yml up --build`, which runs the Playwright suite.
+- End-to-end tests are not part of the Maven build. Trigger the Playwright suite with the modular Compose files: `docker compose -f compose.yml -f compose.mysql.yml -f compose.e2e.yml up --build --abort-on-container-exit --exit-code-from e2e-tests` (swap `compose.mysql.yml` for `compose.postgres.yml` to use PostgreSQL).
 
 ## Acknowledgements
 

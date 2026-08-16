@@ -169,7 +169,7 @@ docker compose \
 ./mvnw -B clean package -DskipTests --file pom.xml
 
 # 2. 启动调度中心
-java -jar xxl-job-admin/target/xxl-job-admin.jar
+java -jar xxl-job-admin/target/*.jar
 ```
 
 启动后访问 [http://localhost:8080](http://localhost:8080)，使用 `admin / 123456` 登录。
@@ -270,7 +270,7 @@ public void demoJobHandler() {
 - `./mvnw -B clean verify --file pom.xml` 会同时执行 Spotless 格式检查、单元测试与 JaCoCo 覆盖率。
 - 仅执行单元测试：`./mvnw -pl xxl-job-core,xxl-job-admin test`。
 - 单类测试：`./mvnw -pl xxl-job-admin -Dtest=ClassName test`。
-- 端到端测试不在 Maven 流程中，需通过 `docker compose -f docker-compose-e2e.yml up --build` 触发 Playwright 套件。
+- 端到端测试不在 Maven 流程中，需通过模块化 Compose 触发 Playwright 套件：`docker compose -f compose.yml -f compose.mysql.yml -f compose.e2e.yml up --build --abort-on-container-exit --exit-code-from e2e-tests`（PostgreSQL 将 `compose.mysql.yml` 替换为 `compose.postgres.yml`）。
 
 ## 致谢
 
