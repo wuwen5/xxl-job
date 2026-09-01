@@ -17,7 +17,7 @@
     <spring-boot.version>3.5.14</spring-boot.version>
     <mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
 
-    <frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
+    <frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
     <node.version>v20.20.2</node.version>
     <npm.version>10.8.2</npm.version>
   </properties>
