@@ -70,7 +70,7 @@
     <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
-    <sonar.plugin>5.7.0.6970</sonar.plugin>
+    <sonar.plugin>5.8.0.7211</sonar.plugin>
     <sonar.organization>wuwen5</sonar.organization>
     <sonar.exclusions>**/src/test/**,
           xxl-job-executor-samples/**</sonar.exclusions>
